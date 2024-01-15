@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch</title>
+  <style>
+    body {
+      background: url('watch.png') center center no-repeat; 
+      background-size: cover;
+      color: #ecf0f1;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      flex-direction: column;
+      border: 5px solid #3498db; 
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .timer {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: #3498db;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #startStopBtn {
+      background-color: #27ae60;
+      color: #fff;
+    }
+
+    #resetBtn {
+      background-color: #3498db; 
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="timer" id="display">00:00:00</div>
+    <div class="btn-container">
+      <button id="startStopBtn" onclick="startStop()">Start</button>
+      <button id="resetBtn" onclick="reset()">Reset</button>
+    </div>
+  </div>
+  <script>
+    let timer;
+    let startTime;
+    let elapsedTime = 0;
+    let running = false;
+
+    function startTimer() {
+      const currentTime = new Date().getTime();
+      elapsedTime = currentTime - startTime;
+
+      let milliseconds = elapsedTime;
+      let seconds = Math.floor(milliseconds / 1000);
+      milliseconds = milliseconds % 1000;
+      let minutes = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+
+      document.getElementById('display').innerHTML =
+        (pad(minutes) + ':' + pad(seconds) + '.' + pad(milliseconds, 3));
+    }
+
+    function pad(number, width = 2) {
+      return number.toString().padStart(width, '0');
+    }
+
+    function startStop() {
+      if (!running) {
+        if (timer === null || elapsedTime === 0) {
+          startTime = new Date().getTime();
+        } else {
+          startTime = new Date().getTime() - elapsedTime;
+        }
+        timer = setInterval(startTimer, 1);
+        document.getElementById('startStopBtn').innerHTML = 'Stop';
+        document.getElementById('startStopBtn').style.backgroundColor = '#e74c3c'; 
+        document.getElementById('resetBtn').style.backgroundColor = '#3498db';
+        running = true;
+      } else {
+        clearInterval(timer);
+        timer = null;
+        document.getElementById('startStopBtn').innerHTML = 'Start';
+        document.getElementById('startStopBtn').style.backgroundColor = '#27ae60'; 
+        document.getElementById('resetBtn').style.backgroundColor = '#3498db'; 
+        running = false;
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      timer = null;
+      elapsedTime = 0;
+      document.getElementById('display').innerHTML = '00:00:00';
+      document.getElementById('startStopBtn').innerHTML = 'Start';
+      document.getElementById('startStopBtn').style.backgroundColor = '#27ae60'; 
+      document.getElementById('resetBtn').style.backgroundColor = '#3498db'; 
+      running = false;
+    }
+  </script>
+</body>
+</html>
